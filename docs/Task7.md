@@ -1,13 +1,5 @@
 # Evaluation Metrics for Defect Image Generation
 
-**Project:** Siemens Energy - Bottle Defect Detection using Stable Diffusion  
-**Task 7:** Automated Quantitative Evaluation Metrics  
-**Date:** January 2026
-
----
-
-## Overview
-
 This document outlines quantitative metrics for evaluating the quality of synthetically generated defect images from the LoRA-tuned Stable Diffusion model. The evaluation framework combines general image quality metrics with domain-specific defect detection criteria.
 
 ---
@@ -69,7 +61,7 @@ InceptionV3 is trained on ImageNet (not defect-specific) and measures object-lev
 **Purpose:** Evaluate if synthetic defects are correctly classified by a defect classifier trained on real images. Adapts the manufacturing quality control concept: synthetic images are the "products" being inspected, and the classifier (fine-tuned on real bottles) acts as the "quality inspector."
 
 **Method:**
-1. Fine-tune a pre-trained classifier (e.g., ResNet-50 starting from ImageNet weights) on **real** bottle images (83 samples) to learn defect patterns
+1. Fine-tune a pre-trained classifier (e.g., ResNet-50) on **real** bottle images (83 samples) to learn defect patterns
 2. Generate synthetic samples per defect class (50-100 recommended)
 3. Run the fine-tuned classifier on synthetic images
 4. Measure per-class accuracy
