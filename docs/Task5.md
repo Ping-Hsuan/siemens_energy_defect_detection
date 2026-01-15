@@ -171,7 +171,7 @@ This acts as a **soft structural constraint**.
 
 ---
 
-## Mask-Aware Geometric Augmentation (Shared)
+## Geometric Augmentation Applied to Images and Masks
 
 To improve diversity and generalization in the few-shot regime, **geometric
 augmentations** are applied consistently to both the image and its
@@ -179,12 +179,10 @@ segmentation mask.
 
 Supported augmentations:
 - Horizontal / vertical flips (when physically plausible)
-- Rotation (e.g., ±10–30°)
-- Translation and random cropping
+- Rotation
 - Mild scaling
 
-Photometric augmentations are intentionally excluded to preserve defect
-appearance semantics.
+Photometric augmentations are not considered here, because they may distort or obscure the visual characteristics of defects.
 
 ---
 
