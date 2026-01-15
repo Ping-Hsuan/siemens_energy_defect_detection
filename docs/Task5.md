@@ -16,11 +16,10 @@ sample efficiency, and realism in low-data industrial inspection settings.
   - Pixel-level defect segmentation masks (defective samples only)
   - Discrete damage-type labels (e.g., `broken_large`, `broken_little`, `contamination`)
 - Clean (`good`) samples contain **no defect mask**
-- Only a small number of examples are available per defect type (few-shot regime)
+- Only a small number of examples are available per defect type
 
 The goal is to generate realistic synthetic defect images while preserving
-product geometry and background, enabling data augmentation for downstream
-defect detection tasks.
+product geometry and background, enabling data augmentation for defect detection models.
 
 ---
 
@@ -32,8 +31,11 @@ defect detection tasks.
 | Segmentation mask | Controls **where defect** appears |
 | Image context | Preserves product geometry and background |
 
-The damage-type embedding replaces text conditioning and is injected through
-cross-attention layers in the diffusion U-Net.
+As established in Task 4, we fine-tune a pretrained Stable Diffusion 1.5 model
+using a learned damage-type embedding in place of the standard CLIP text
+conditioning. This embedding is injected into the diffusion U-Net via the
+standard cross-attention layers, while Low-Rank Adaptation (LoRA) is used to
+efficiently fine-tune the U-Net with the base model weights kept frozen.
 
 ---
 
