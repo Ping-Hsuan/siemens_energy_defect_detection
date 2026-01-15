@@ -36,7 +36,7 @@ data_config = {
 ```
 **Note:** SD v1.5 was trained with 512×512 images. Its VAE/UNet expect latents produced from that resolution, so using 512 preserves the learned priors and avoids distribution shift
 
-Core hyperparameters (v3 baseline)
+Hyperparameters
 ```python
 training_config = {
     "num_epochs": 250,
