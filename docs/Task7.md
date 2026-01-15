@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document outlines quantitative metrics for evaluating the quality of synthetically generated defect images from our LoRA-tuned Stable Diffusion model. The evaluation framework combines general image quality metrics with domain-specific defect detection criteria.
+This document outlines quantitative metrics for evaluating the quality of synthetically generated defect images from the LoRA-tuned Stable Diffusion model. The evaluation framework combines general image quality metrics with domain-specific defect detection criteria.
 
 ---
 
@@ -19,9 +19,8 @@ This document outlines quantitative metrics for evaluating the quality of synthe
 **Purpose:** Measures the distance between real and generated image distributions in feature space.
 
 **Definition:**
-$$
-\text{FID} = \|\mu_r - \mu_g\|^2 + \text{Tr}(\Sigma_r + \Sigma_g - 2\sqrt{\Sigma_r \Sigma_g})
-$$
+
+$$\text{FID} = ||\mu_r - \mu_g||^2 + \text{Tr}(\Sigma_r + \Sigma_g - 2\sqrt{\Sigma_r \Sigma_g})$$
 
 Where:
 - $\mu_r, \mu_g$ = mean of real and generated image features
@@ -44,9 +43,8 @@ Where:
 **Purpose:** Evaluates image quality and diversity using a pretrained classifier.
 
 **Definition:**
-$$
-\text{IS} = \exp\left(\mathbb{E}_x\left[D_{KL}(p(y|x) \| p(y))\right]\right)
-$$
+
+$$\text{IS} = \exp(\mathbb{E}_x[D_{KL}(p(y|x) \| p(y))])$$
 
 Where:
 - $p(y|x)$ = conditional class distribution from InceptionV3
@@ -78,9 +76,8 @@ Where:
 4. Measure per-class accuracy
 
 **Definition:**
-$$
-\text{DDA}_c = \frac{\text{Correct predictions for class } c}{\text{Total synthetic samples of class } c}
-$$
+
+$$\text{DDA}_c = \frac{\text{Correct predictions for class } c}{\text{Total synthetic samples of class } c}$$
 
 **Target Benchmarks:**
 - **broken_large:** DDA ≥ 90% (most distinctive defect)
@@ -98,9 +95,8 @@ $$
 **Purpose:** Measure structural preservation between real and synthetic defect patterns.
 
 **Definition:**
-$$
-\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}
-$$
+
+$$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
 
 **Application:**
 - Compute SSIM between generated and nearest real sample per class
@@ -119,9 +115,8 @@ $$
 3. Measure spatial overlap with expected defect zones
 
 **Definition:**
-$$
-\text{DLC} = \frac{\text{Overlap}(\text{Generated defect region}, \text{Expected region})}{\text{Union}(\text{Generated defect region}, \text{Expected region})}
-$$
+
+$$\text{DLC} = \frac{\text{Overlap}(\text{Generated defect region}, \text{Expected region})}{\text{Union}(\text{Generated defect region}, \text{Expected region})}$$
 
 **Target:** DLC ≥ 0.6 (defects in realistic bottle locations)
 
@@ -139,9 +134,8 @@ $$
 3. Average distance = diversity score
 
 **Definition:**
-$$
-\text{ICD}_c = \frac{1}{N(N-1)} \sum_{i \neq j} (1 - \cos(\mathbf{f}_i, \mathbf{f}_j))
-$$
+
+$$\text{ICD}_c = \frac{1}{N(N-1)} \sum_{i \neq j} (1 - \cos(\mathbf{f}_i, \mathbf{f}_j))$$
 
 **Interpretation:**
 - **ICD > 0.3:** Good diversity (samples are distinct)
@@ -157,9 +151,8 @@ $$
 3. Lower distance = better coverage
 
 **Definition:**
-$$
-\text{FSC} = \frac{1}{N_{\text{real}}} \sum_{i=1}^{N_{\text{real}}} \min_j \|\mathbf{f}_i^{\text{real}} - \mathbf{f}_j^{\text{syn}}\|_2
-$$
+
+$$\text{FSC} = \frac{1}{N_{\text{real}}} \sum_{i=1}^{N_{\text{real}}} \min_j ||\mathbf{f}_i^{\text{real}} - \mathbf{f}_j^{\text{syn}}||_2$$
 
 **Target:** FSC < 0.5 (synthetic samples close to real distribution)
 
@@ -206,9 +199,8 @@ $$
 3. Measure test accuracy improvement
 
 **Definition:**
-$$
-\text{AER} = \frac{\text{Accuracy}_{\text{augmented}} - \text{Accuracy}_{\text{baseline}}}{\text{Accuracy}_{\text{baseline}}} \times 100\%
-$$
+
+$$\text{AER} = \frac{\text{Accuracy}_{\text{augmented}} - \text{Accuracy}_{\text{baseline}}}{\text{Accuracy}_{\text{baseline}}} \times 100\%$$
 
 **Current Observation:** Your v3 (rotation) significantly outperforms v2 (no rotation)
 
