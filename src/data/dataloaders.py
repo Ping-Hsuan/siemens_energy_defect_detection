@@ -79,7 +79,7 @@ def make_distributed_dataloader(
     batch_size: int,
     num_replicas: int,
     rank: int,
-    shuffle: bool = False,
+    shuffle: bool = True,
     num_workers: int = 4,
     pin_memory: bool = True,
     drop_last: bool = True,
