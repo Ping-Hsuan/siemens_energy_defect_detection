@@ -79,7 +79,7 @@ def make_distributed_dataloader(
     batch_size: int,
     num_replicas: int,
     rank: int,
-    shuffle: bool = True,
+    shuffle: bool = False,
     num_workers: int = 4,
     pin_memory: bool = True,
     drop_last: bool = True,
@@ -87,15 +87,15 @@ def make_distributed_dataloader(
     seed: int = 0,
 ) -> Tuple[DataLoader, DistributedSampler]:
     """
-    Create DataLoader for multi-GPU / multi-process training (PyTorch DDP).
+    Create DataLoader for multi-GPU training.
 
     Args:
         dataset: PyTorch Dataset (e.g., DefectSpectrumLocalDataset)
         batch_size: Batch size PER GPU (global batch = batch_size * num_replicas)
-        num_replicas: Total number of processes (typically world_size)
+        num_replicas: Total number of processes (typically number of GPUs)
         rank: Rank of current process (0 to num_replicas-1)
         shuffle: Whether to shuffle data each epoch
-        num_workers: Number of worker processes per GPU
+        num_workers: Number of DataLoader worker processes per GPU
         pin_memory: Pin memory for faster GPU transfer
         drop_last: Drop incomplete final batch
         prefetch_factor: Number of batches to prefetch per worker
@@ -105,37 +105,6 @@ def make_distributed_dataloader(
       - DistributedSampler shards dataset across ranks (no data duplication)
       - Set shuffle=False on DataLoader; sampler handles shuffling
       - MUST call sampler.set_epoch(epoch) before each epoch for proper shuffling
-
-    Multi-GPU Performance Tips:
-      - num_workers: Divide total workers by num_gpus (e.g., 8 workers / 4 GPUs = 2 per GPU)
-      - batch_size: This is per-GPU batch size; effective batch = batch_size * num_replicas
-      - Ensure dataset is large enough: need >> batch_size * num_replicas samples
-
-    Example Usage:
-        >>> # In each process (rank 0, 1, 2, 3 for 4-GPU training)
-        >>> import torch.distributed as dist
-        >>> from src.data.defect_spectrum_local import DefectSpectrumLocalDataset, LocalDatasetConfig
-        >>> 
-        >>> dist.init_process_group(backend="nccl")
-        >>> rank = dist.get_rank()
-        >>> world_size = dist.get_world_size()
-        >>> 
-        >>> cfg = LocalDatasetConfig(product_classes=["zipper"], load_masks=True)
-        >>> dataset = DefectSpectrumLocalDataset("Defect_Spectrum", cfg)
-        >>> 
-        >>> loader, sampler = make_distributed_dataloader(
-        ...     dataset,
-        ...     batch_size=8,  # 8 per GPU → 32 total
-        ...     num_replicas=world_size,
-        ...     rank=rank,
-        ...     num_workers=2,
-        ... )
-        >>> 
-        >>> for epoch in range(100):
-        ...     sampler.set_epoch(epoch)  # CRITICAL for proper shuffling!
-        ...     for batch in loader:
-        ...         # Each rank sees different data
-        ...         print(f"Rank {rank}: {batch['pixel_values'].shape}")
     """
     sampler = DistributedSampler(
         dataset,
